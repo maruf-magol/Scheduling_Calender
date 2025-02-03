@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, rgb(255, 255, 255), rgb(255, 255, 255));
+            color: black;
+            margin: 0;
+        }
+
+        /* Main container for fullscreen scrolling */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow: auto;
+        }
+
+        /* Date display in top left corner */
+        .current-date {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        /* Bigger and greener "Add New Task" button */
+        .add-task-btn {
+            background: #28a745;
+            color: white;
+            font-size: 1.2rem;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .add-task-btn:hover {
+            background: #218838;
+        }
+
+        /* Calendar grid */
+        .calendar-container {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: auto repeat(5, 1fr);
+            gap: 5px;
+            width: 90vw;
+            height: 80vh;
+            max-width: 1200px;
+            margin-bottom: 20px;
+        }
+
+        /* Weekday names row */
+        .weekday {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding: 10px 0;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+
+        /* Each day cell */
+        .day {
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            font-size: 1.2rem;
+            overflow: hidden;
+        }
+
+        /* Past, today, and future color coding */
+        .past {
+            background-color: #d3d3d3;
+            color: #555;
+        }
+
+        .today {
+            background-color: #a0e99b;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .future {
+            background-color: #ffcba4;
+            color: black;
+        }
+
+        /* Hide empty boxes */
+        .empty {
+            visibility: hidden;
+        }
+
+        /* Task styling */
+        .task {
+            font-size: 0.9rem;
+            text-align: left;
+            width: 90%;
+            margin-top: 5px;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        .completed {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .not-completed {
+            background-color: rgb(239, 84, 84);
+            color: black;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Display current date and day name -->
+        <div class="current-date">
+            {{ current_day }}, {{ current_date }}
+        </div>
+
+        <br><br>
+
+        <h1>Task Calendar</h1>
+        
+        <a href="{% url 'add_task' %}">
+            <button class="add-task-btn">Add New Task</button>
+        </a>
+
+        <div class="calendar-container">
+            <!-- Weekday headers -->
+            <div class="weekday">Saturday</div>
+            <div class="weekday">Sunday</div>
+            <div class="weekday">Monday</div>
+            <div class="weekday">Tuesday</div>
+            <div class="weekday">Wednesday</div>
+            <div class="weekday">Thursday</div>
+            <div class="weekday">Friday</div>
+
+            <!-- Calendar days -->
+            {% for week in calendar %}
+                {% for day in week %}
+                    {% if day.date %}
+                        <div class="day {% if day.past %}past{% elif day.today %}today{% else %}future{% endif %}">
+                            <strong>{{ day.date }}</strong>
+                            {% for task in day.tasks %}
+                                <a href="{% url 'task_details' task.id %}" style="color: inherit; text-decoration: none;">
+                                    <div class="task {% if task.completed %}completed{% else %}not-completed{% endif %}">
+                                        {% if task.completed %}✔{% else %}○{% endif %}
+                                        {{ task.title }}
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty"></div> <!-- Invisible empty cell -->
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+        <h2>Not Completed Tasks</h2>
+        <ul>
+            {% for task in not_completed_tasks %}
+                <li>
+                    <a href="{% url 'task_details' task.id %}">{{ task.title }}</a>
+                </li>
+            {% empty %}
+                <p>No incomplete tasks.</p>
+            {% endfor %}
+        </ul>
+        
+        <h2>Completed Tasks</h2>
+        <ul>
+            {% for task in completed_tasks %}
+                <li>
+                    <a href="{% url 'task_details' task.id %}">{{ task.title }}</a>
+                </li>
+            {% empty %}
+                <p>No completed tasks.</p>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

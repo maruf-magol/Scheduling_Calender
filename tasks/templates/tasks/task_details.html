@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            color: white;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 400px;
+            color: black;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background:rgb(0, 239, 203);
+        }
+        .delete-button {
+            background: #dc3545;
+        }
+        .delete-button:hover {
+            background: #c82333;
+        }
+        .edit-button {
+            background: #007bff;
+        }
+        .edit-button:hover {
+            background: #0056b3;
+        }
+        .task-info {
+            text-align: left;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+        #edit-form {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Task Details</h1>
+        <div class="task-info">
+            <p><strong>Title:</strong> {{ task.title }}</p>
+            <p><strong>Description:</strong> {{ task.description }}</p>
+            <p><strong>Created Date:</strong> {{ task.created_date }}</p>
+            <p><strong>Due Date:</strong> {{ task.due_date }}</p>
+            <p><strong>Completed:</strong> {{ task.completed|yesno:"Yes,No" }}</p>
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+            {% if not task.completed %}
+            <button type="submit" name="mark_as_done">Mark as Done</button>
+            {% endif %}
+            <button type="submit" name="delete" class="delete-button">Delete</button><br><br>
+        </form>
+        <a href="{% url 'home' %}"><button>Home</button></a>
+        <h2>Edit This Task</h2>
+        <form method="POST" id="edit-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" name="save_changes">Save</button>
+            <a href="{% url 'task_details' task.id %}"><button type="button">Cancel</button></a>
+        </form>
+        <button id="edit-button" class="edit-button" onclick="showEditForm()">Edit</button>
+    </div>
+    <script>
+        function showEditForm() {
+            document.getElementById('edit-form').style.display = 'block';
+            document.getElementById('edit-button').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

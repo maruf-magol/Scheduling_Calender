@@ -1,0 +1,45 @@
+1. Open Your TODOlist Folder in VS Code
+
+2. Create and Activate Your Virtual Environment
+        -->cd TODOlist
+        creat the virtual environment
+	--> py -m venv venv
+        activate the virtual Environment
+        -->.\venv\Scripts\activate
+
+3. Install Dependencies from requirements.txt
+        -->pip install -r requirements.txt
+
+
+4. Configure Python Interpreter in VS Code
+Press Ctrl + Shift + P (or Cmd + Shift + P on Mac) to open the command palette.
+Type and select "Python: Select Interpreter".
+Choose the interpreter associated with your virtual environment. It should be listed as something like:
+
+
+5. Verify the Environment
+        Check if Django is installed in the virtual environment:
+        -->python -m django --version
+        If you don't see a version number, install Django manually:
+        -->pip install django
+
+6. Create the Django Project
+        --> django-admin startproject project_name .
+
+7. Run the Development Server
+        -->python manage.py runserver
+
+8. (Optional) Install Additional Tools
+        -->pip install python-decouple
+
+
+
+<<code shuru>>
+
+
+
+
+
+
+
+

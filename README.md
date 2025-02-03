@@ -28,7 +28,9 @@ This is a **Django-based To-Do List application** that integrates a **calendar v
 
 
 ##  Home page
+![home ss](home.png)
 
 ## Task details page
-
+![task details](task-details.png)
 ## Task editing page
+![edit window](add_new_task.png)
